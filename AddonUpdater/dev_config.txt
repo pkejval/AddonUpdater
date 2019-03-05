@@ -1,0 +1,8 @@
+﻿# Set path to your World of Warcraft installation
+WOW_PATH=C:\TMP\WOW
+
+# Set list of addons URLs - delimited by new line (ENTER)
+https://wow.curseforge.com/projects/plater-nameplates
+https://wowinterface.com/downloads/info8814-DeadlyBossMods.html
+https://www.tukui.org/download.php?ui=elvui
+https://www.tukui.org/addons.php?id=38
