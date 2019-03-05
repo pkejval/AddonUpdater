@@ -12,12 +12,15 @@ namespace AddonUpdater
 {
     internal class Program
     {
+        public static bool interactive = true;
+
         public static async Task Main(string[] args)
         {
             Console.WriteLine("*******************");
             Console.WriteLine("*WoW Addon updater*");
             Console.WriteLine("*******************\n");
 
+            interactive = !(args.Count() > 0 && args[0] == "--script");
             var addons = new List<Addon>();
 #if RELEASE
             var cnf_path = Path.Join(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "config.txt");
@@ -26,9 +29,8 @@ namespace AddonUpdater
 #endif
             if (!File.Exists(cnf_path))
             {
-                Console.WriteLine($"Config file wasn't found at {cnf_path}! Creating example. Please set WOW_PATH and addons URL.");
-                File.WriteAllText(cnf_path, @"WOW_PATH=C:\Program Files (x86)\Battle.NET\World of Warcraft");
-                Environment.Exit(1);
+                File.WriteAllText(cnf_path, "# Set path to your World of Warcraft installation\nWOW_PATH=C:\\Program Files (x86)\\Battle.NET\\World of Warcraft\n\n# Set list of addons URLs - delimited by new line (ENTER)\n#https://wow.curseforge.com/projects/plater-nameplates\n##https://www.tukui.org/download.php?ui=elvui");
+                Exit($"Config file wasn't found at {cnf_path}! Creating example. Please set WOW_PATH and addons URLs.", 1);
             }
             else
             {
@@ -44,7 +46,7 @@ namespace AddonUpdater
                         if (line.StartsWith("WOW_PATH="))
                         {
                             Global.WoWPath = Path.Combine(line.Substring(9, line.Length - 9), "_retail_", "Interface", "Addons");
-                            if (!Directory.Exists(Global.WoWPath)) { Console.WriteLine("WoW cannot be found!"); Environment.Exit(1); }
+                            if (!Directory.Exists(Global.WoWPath)) { Exit("WoW cannot be found!", 1); }
                             Global.AddonUpdaterFilePath = Path.Combine(Global.WoWPath, "AddonUpdater.json");
                         }
                         // Addon URL
@@ -52,7 +54,7 @@ namespace AddonUpdater
                     }
                 }
 
-                if (string.IsNullOrEmpty(Global.WoWPath)) { Console.WriteLine("WOW_PATH isn't set in config file!"); Environment.Exit(1); }
+                if (string.IsNullOrEmpty(Global.WoWPath)) { Exit("WOW_PATH isn't set in config file!", 1); }
             }
 
             // load AddonUpdater saved version file
@@ -71,12 +73,19 @@ namespace AddonUpdater
             // save versions dict to file
             File.WriteAllText(Global.AddonUpdaterFilePath, JsonConvert.SerializeObject(Global.InstalledAddons));
 
-            // skip counting / printing / blocking when running from script
-            if (args.Count() > 0 && args[0] == "--script") { Environment.Exit(0); }
-
             Console.WriteLine($"\n{addons.Count(x => x.New)} installed | {addons.Count(x => x.Updated)} updated | {addons.Count(x => x.Error)} errors");
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ReadKey();
+            Exit("", 0);
+        }
+
+        public static void Exit(string msg = "", int code = 0)
+        {
+            if (!string.IsNullOrEmpty(msg)) { Console.WriteLine(msg + "\n"); }
+            if (interactive)
+            {
+                Console.WriteLine("\nPress any key to exit...");
+                Console.ReadKey();
+            }
+            Environment.Exit(code);
         }
     }
 }
