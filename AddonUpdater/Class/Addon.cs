@@ -30,12 +30,14 @@ namespace AddonUpdater.Class
         {
             try
             {
+                bool download = true;
                 InstalledVersion = Global.InstalledAddons.ContainsKey(URL.OriginalString) ? Global.InstalledAddons[URL.OriginalString] : "";
 
                 Dictionary<string, IAddonSite> sites = new Dictionary<string, IAddonSite>()
                 {
                     { "wow.curseforge.com", new AddonSites.Curse() },
                     { "www.wowace.com", new AddonSites.Curse() }, // wowace is the same logic as curseforge with another skin/domain
+                    { "www.curseforge.com", new AddonSites.MetaCurseForgePage() }, // just lookup link for wow.curseforge.com or www.wowace.com
                     { "wowinterface.com", new AddonSites.WoWInterface() },
                     { "www.tukui.org", new AddonSites.TukUI() }
                 };
@@ -51,12 +53,22 @@ namespace AddonUpdater.Class
                     using (var request = await client.GetAsync(site.GetURL(URL)))
                     {
                         var response = await request.Content.ReadAsStringAsync();
-                        site.ParseResponse(response, request.RequestMessage.RequestUri);
+                        var addon = site.ParseResponse(response, request.RequestMessage.RequestUri);
                         Response = site.Response;
+
+                        // Addon was handled by IAddonSite - just set properties from it
+                        if (addon != null)
+                        {
+                            InstalledVersion = addon.InstalledVersion;
+                            New = addon.New;
+                            Updated = addon.Updated;
+                            Error = addon.Error;
+                            download = false;
+                        }
                     }
 
                     // download and extract only if website version is different
-                    if (string.IsNullOrEmpty(InstalledVersion) || InstalledVersion != Response.Version)
+                    if (download && (string.IsNullOrEmpty(InstalledVersion) || InstalledVersion != Response.Version))
                     {
                         if (string.IsNullOrEmpty(InstalledVersion)) { New = true; }
                         else { Updated = true; }

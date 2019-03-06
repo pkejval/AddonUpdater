@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -10,10 +11,9 @@ namespace AddonUpdater.Class
     /// </summary>
     internal interface IAddonSite
     {
-        string Name { get; }
         AddonSiteResponse Response { get; }
 
-        void ParseResponse(string response, Uri url);
+        Addon ParseResponse(string response, Uri url);
 
         string GetURL(Uri url);
     }
@@ -31,10 +31,9 @@ namespace AddonUpdater.Class
         /// </summary>
         public class Curse : IAddonSite
         {
-            public string Name { get { return "Curse"; } }
             public AddonSiteResponse Response { get; private set; }
 
-            public void ParseResponse(string response, Uri url)
+            public Addon ParseResponse(string response, Uri url)
             {
                 Response = new AddonSiteResponse();
                 var r = new Regex(@"release-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", RegexOptions.Singleline | RegexOptions.Compiled);
@@ -42,14 +41,16 @@ namespace AddonUpdater.Class
                 Match m = r.Match(response);
                 if (m.Success)
                 {
-                    Response.DownloadURL = $"{url.OriginalString}/{m.Groups[1].Value}/download";
+                    Response.DownloadURL = $"{url.Scheme}://{url.Host}{url.LocalPath}/{m.Groups[1].Value}/download";
                     Response.Version = m.Groups[2].Value;
                 }
+
+                return null;
             }
 
             public string GetURL(Uri url)
             {
-                return $"{url.ToString()}/files";
+                return $"{url}/files?sort=releasetype";
             }
         }
 
@@ -58,10 +59,9 @@ namespace AddonUpdater.Class
         /// </summary>
         public class WoWInterface : IAddonSite
         {
-            public string Name { get { return "WoWInterface"; } }
             public AddonSiteResponse Response { get; private set; }
 
-            public void ParseResponse(string response, Uri url)
+            public Addon ParseResponse(string response, Uri url)
             {
                 Response = new AddonSiteResponse();
 
@@ -74,6 +74,8 @@ namespace AddonUpdater.Class
                 Match m2 = r2.Match(url.Segments[2]);
 
                 Response.DownloadURL = $"https://cdn.wowinterface.com/downloads/file{m2.Groups[1].Value}/";
+
+                return null;
             }
 
             public string GetURL(Uri url)
@@ -87,10 +89,9 @@ namespace AddonUpdater.Class
         /// </summary>
         public class TukUI : IAddonSite
         {
-            public string Name { get { return "TukUI"; } }
             public AddonSiteResponse Response { get; private set; }
 
-            public void ParseResponse(string response, Uri url)
+            public Addon ParseResponse(string response, Uri url)
             {
                 Response = new AddonSiteResponse();
 
@@ -111,11 +112,42 @@ namespace AddonUpdater.Class
                     Response.DownloadURL = matches[0].Success ? $"{url.Scheme}://{url.Host}/downloads/{matches[0].Groups[2].Value}" : "";
                     Response.Version = matches[1].Success ? matches[1].Groups[4].Value : "";
                 }
+
+                return null;
             }
 
             public string GetURL(Uri url)
             {
                 return url.PathAndQuery;
+            }
+        }
+
+        public class MetaCurseForgePage : IAddonSite
+        {
+            private IAddonSite Addon { get; set; }
+            public AddonSiteResponse Response { get; private set; }
+
+            public Addon ParseResponse(string response, Uri url)
+            {
+                var r = new Regex(@"a href=\""(.*?)\"">Visit Project Page", RegexOptions.Compiled);
+                var m = r.Match(response);
+
+                if (m.Success)
+                {
+                    // parsed "ordinary" (wow.curseforge.com || www.wowace.com) link, call addon method again
+                    var addon = new Addon(m.Groups[1].Value);
+                    addon.Update().Wait();
+                    Response = addon.Response;
+
+                    return addon;
+                }
+
+                return null;
+            }
+
+            public string GetURL(Uri uri)
+            {
+                return uri.OriginalString;
             }
         }
     }
