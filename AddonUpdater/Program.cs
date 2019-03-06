@@ -70,6 +70,8 @@ namespace AddonUpdater
             var tasks = addons.Select(x => x.Update());
             await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(120000));
 
+            // update version dict
+            addons.ForEach(x => { Global.InstalledAddons[x.URL.OriginalString] = x.Response?.Version; });
             // save versions dict to file
             File.WriteAllText(Global.AddonUpdaterFilePath, JsonConvert.SerializeObject(Global.InstalledAddons));
 

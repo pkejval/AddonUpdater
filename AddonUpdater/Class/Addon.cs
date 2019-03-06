@@ -81,7 +81,6 @@ namespace AddonUpdater.Class
 
                         ZipFile.ExtractToDirectory(DownloadedFilePath, Global.WoWPath, true);
                         File.Delete(DownloadedFilePath);
-                        Global.InstalledAddons[URL.OriginalString] = Response.Version;
                     }
                 }
             }
