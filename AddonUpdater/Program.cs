@@ -12,15 +12,13 @@ namespace AddonUpdater
 {
     internal class Program
     {
-        public static bool interactive = true;
-
         public static async Task Main(string[] args)
         {
             Console.WriteLine("*******************");
             Console.WriteLine("*WoW Addon updater*");
             Console.WriteLine("*******************\n");
 
-            interactive = !(args.Count() > 0 && args[0] == "--script");
+            Global.InteractiveMode = !(args.Count() > 0 && args[0] == "--script");
             var addons = new List<Addon>();
 #if RELEASE
             var cnf_path = Path.Join(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "config.txt");
@@ -45,6 +43,7 @@ namespace AddonUpdater
                         // WoW path
                         if (line.StartsWith("WOW_PATH="))
                         {
+                            if (!string.IsNullOrEmpty(Global.WoWPath)) { Console.WriteLine("Warning! You have multiple WOW_PATH set in config.txt! Using last found path."); }
                             Global.WoWPath = Path.Combine(line.Substring(9, line.Length - 9), "_retail_", "Interface", "Addons");
                             if (!Directory.Exists(Global.WoWPath)) { Exit("WoW cannot be found!", 1); }
                             Global.AddonUpdaterFilePath = Path.Combine(Global.WoWPath, "AddonUpdater.json");
@@ -82,7 +81,7 @@ namespace AddonUpdater
         public static void Exit(string msg = "", int code = 0)
         {
             if (!string.IsNullOrEmpty(msg)) { Console.WriteLine(msg + "\n"); }
-            if (interactive)
+            if (Global.InteractiveMode)
             {
                 Console.WriteLine("\nPress any key to exit...");
                 Console.ReadKey();

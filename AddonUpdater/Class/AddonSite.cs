@@ -97,7 +97,7 @@ namespace AddonUpdater.Class
 
                 if (url.LocalPath == "/addons.php")
                 {
-                    var r = new Regex(@"The latest version of this addon is <b class=""VIP"">(.*?)\<\/b>");
+                    var r = new Regex(@"The latest version of this addon is <b class=""VIP"">(.*?)\<\/b>", RegexOptions.Compiled);
                     Match m = r.Match(response);
                     if (m.Success)
                     {

@@ -30,24 +30,15 @@ namespace AddonUpdater.Class
         {
             try
             {
+                if (!Global.AddonSites.ContainsKey(URL.Host)) { Console.WriteLine($"Unsupported addon site: {URL.Host}"); Error = true; return; }
+
                 bool download = true;
                 InstalledVersion = Global.InstalledAddons.ContainsKey(URL.OriginalString) ? Global.InstalledAddons[URL.OriginalString] : "";
-
-                Dictionary<string, IAddonSite> sites = new Dictionary<string, IAddonSite>()
-                {
-                    { "wow.curseforge.com", new AddonSites.Curse() },
-                    { "www.wowace.com", new AddonSites.Curse() }, // wowace is the same logic as curseforge with another skin/domain
-                    { "www.curseforge.com", new AddonSites.MetaCurseForgePage() }, // just lookup link for wow.curseforge.com or www.wowace.com
-                    { "wowinterface.com", new AddonSites.WoWInterface() },
-                    { "www.tukui.org", new AddonSites.TukUI() }
-                };
-
-                if (!sites.ContainsKey(URL.Host)) { Console.WriteLine($"Unsupported addon site: {URL.Host}"); Error = true; return; }
 
                 using (var client = new HttpClient())
                 {
                     // lookup addon website
-                    var site = sites[URL.Host];
+                    var site = (IAddonSite)Activator.CreateInstance(Global.AddonSites[URL.Host]);
                     client.BaseAddress = new Uri(URL.Scheme + "://" + URL.Host);
 
                     using (var request = await client.GetAsync(site.GetURL(URL)))
