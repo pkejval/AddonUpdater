@@ -59,6 +59,7 @@ namespace AddonUpdater.Class
                             New = addon.New;
                             Updated = addon.Updated;
                             Error = addon.Error;
+                            URL = addon.URL;
                             download = false;
                         }
                     }
