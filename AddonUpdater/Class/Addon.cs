@@ -26,6 +26,11 @@ namespace AddonUpdater.Class
             this.URL = new Uri(URL);
         }
 
+        /// <summary>
+        /// Does all the work.
+        /// Looks for new addon version, downloads it and extracts it to WOW_PATH directory.
+        /// </summary>
+        /// <returns></returns>
         public async Task Update()
         {
             try
@@ -79,7 +84,7 @@ namespace AddonUpdater.Class
         }
 
         /// <summary>
-        /// Downloads file from addon website
+        /// Downloads file from addon website.
         /// </summary>
         /// <param name="client"></param>
         private void Download(HttpClient client)

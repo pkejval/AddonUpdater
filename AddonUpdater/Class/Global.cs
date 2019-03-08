@@ -7,7 +7,7 @@ namespace AddonUpdater.Class
     public static class Global
     {
         /// <summary>
-        /// Holds all supported addon sites and its types
+        /// Holds all supported addon sites and its types.
         /// </summary>
         public static Dictionary<string, Type> AddonSites = new Dictionary<string, Type>()
         {
@@ -19,12 +19,23 @@ namespace AddonUpdater.Class
         };
 
         /// <summary>
-        /// Holds information about installed addons (URLs) and its versions
+        /// Holds information about installed addons (URLs) and its versions.
         /// </summary>
         public static Dictionary<string, string> InstalledAddons = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Path to World of Warcraft/_retail_/Interface/Addons.
+        /// </summary>
         public static string WoWPath;
+
+        /// <summary>
+        /// Path to AddonUpdaterFilePath DB file.
+        /// </summary>
         public static string AddonUpdaterFilePath;
+
+        /// <summary>
+        /// Sets if app is running in interactive mode = hold at the end.
+        /// </summary>
         public static bool InteractiveMode = true;
     }
 }
