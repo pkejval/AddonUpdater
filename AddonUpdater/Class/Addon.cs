@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace AddonUpdater.Class
 {
@@ -76,7 +77,9 @@ namespace AddonUpdater.Class
 
                         if (Error) { Console.WriteLine($"{URL.OriginalString} - ERROR"); return; }
 
-                        ZipFile.ExtractToDirectory(DownloadedFilePath, Global.WoWPath, true);
+                        FastZip zip = new FastZip();
+                        zip.ExtractZip(DownloadedFilePath, Global.WoWPath, null);
+                        //ZipFile.ExtractToDirectory(DownloadedFilePath, Global.WoWPath, true);
                         File.Delete(DownloadedFilePath);
                     }
                 }
