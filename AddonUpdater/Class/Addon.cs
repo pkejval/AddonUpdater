@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Zip;
 
@@ -47,23 +48,38 @@ namespace AddonUpdater.Class
                     var site = (IAddonSite)Activator.CreateInstance(Global.AddonSites[URL.Host]);
                     client.BaseAddress = new Uri(URL.Scheme + "://" + URL.Host);
 
-                    using (var request = await client.GetAsync(site.GetURL(URL)))
-                    {
-                        var response = await request.Content.ReadAsStringAsync();
-                        var addon = site.ParseResponse(response, request.RequestMessage.RequestUri);
-                        Response = site.Response;
+                    var iter = 0;
+                    var connection_problem = true;
 
-                        // Addon was handled by IAddonSite - just set properties from it
-                        if (addon != null)
+                    while (connection_problem)
+                    {
+                        try
                         {
-                            InstalledVersion = addon.InstalledVersion;
-                            New = addon.New;
-                            Updated = addon.Updated;
-                            Error = addon.Error;
-                            URL = addon.URL;
-                            download = false;
+                            using (var request = await client.GetAsync(site.GetURL(URL)))
+                            {
+                                var response = await request.Content.ReadAsStringAsync();
+                                var addon = site.ParseResponse(response, request.RequestMessage.RequestUri);
+                                Response = site.Response;
+
+                                // Addon was handled by IAddonSite - just set properties from it
+                                if (addon != null)
+                                {
+                                    InstalledVersion = addon.InstalledVersion;
+                                    New = addon.New;
+                                    Updated = addon.Updated;
+                                    Error = addon.Error;
+                                    URL = addon.URL;
+                                    download = false;
+                                }
+
+                                connection_problem = false;
+                            }
                         }
+                        // If Http exception - wait 5s and try again.... after 24 tries = 2 minutes, fail
+                        catch (HttpRequestException) { iter++; if (iter >= 24) { break; } Thread.Sleep(5000); connection_problem = true; }
                     }
+
+                    if (connection_problem) { Error = true; return; }
 
                     // download and extract only if website version is different
                     if (download && (string.IsNullOrEmpty(InstalledVersion) || InstalledVersion != Response.Version))
@@ -73,14 +89,14 @@ namespace AddonUpdater.Class
 
                         Console.WriteLine($"Downloading {URL.OriginalString} - {(New ? "not installed" : $"new version {Response.Version}")}");
 
-                        Download(client);
+                        if (await Download(client))
+                        {
+                            FastZip zip = new FastZip();
+                            zip.ExtractZip(DownloadedFilePath, Global.WoWPath, null);
+                            File.Delete(DownloadedFilePath);
+                        }
 
                         if (Error) { Console.WriteLine($"{URL.OriginalString} - ERROR"); return; }
-
-                        FastZip zip = new FastZip();
-                        zip.ExtractZip(DownloadedFilePath, Global.WoWPath, null);
-                        //ZipFile.ExtractToDirectory(DownloadedFilePath, Global.WoWPath, true);
-                        File.Delete(DownloadedFilePath);
                     }
                 }
             }
@@ -91,19 +107,24 @@ namespace AddonUpdater.Class
         /// Downloads file from addon website.
         /// </summary>
         /// <param name="client"></param>
-        private void Download(HttpClient client)
+        private async Task<bool> Download(HttpClient client)
         {
             try
             {
                 var tmp = Path.GetTempFileName();
 
-                using (var c = new WebClient())
+                using (var result = await client.GetStreamAsync(Response.DownloadURL))
                 {
-                    c.DownloadFile(Response.DownloadURL, tmp);
-                    DownloadedFilePath = tmp;
+                    using (FileStream fs = new FileStream(tmp, FileMode.OpenOrCreate))
+                    {
+                        await result.CopyToAsync(fs);
+                        DownloadedFilePath = tmp;
+                    }
                 }
+
+                return true;
             }
-            catch { Error = true; }
+            catch { Error = true; return false; }
         }
     }
 }
