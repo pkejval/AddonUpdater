@@ -59,7 +59,7 @@ namespace AddonUpdater.Class
                 Match m = r.Match(response);
                 if (m.Success)
                 {
-                    Response.DownloadURL = $"{url.Scheme}://{url.Host}{url.LocalPath}/{m.Groups[1].Value}/download";
+                    Response.DownloadURL = $"{url.Scheme}://{url.Host}{url.LocalPath}{(!url.LocalPath.Contains("/files") ? "/files" : "")}/{m.Groups[1].Value}/download";
                     Response.Version = m.Groups[2].Value;
                 }
 

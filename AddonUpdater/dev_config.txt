@@ -2,6 +2,8 @@
 WOW_PATH=C:\TMP\WOW
 
 # Set list of addons URLs - delimited by new line (ENTER)
+# Possible problematic URL
+https://wow.curseforge.com/projects/clique?gameCategorySlug=addons&projectID=15564
 # ELV UI
 https://www.tukui.org/download.php?ui=elvui
 https://www.tukui.org/addons.php?id=38
