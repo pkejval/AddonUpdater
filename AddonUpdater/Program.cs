@@ -74,7 +74,7 @@ namespace AddonUpdater
             // save versions dict to file
             File.WriteAllText(Global.AddonUpdaterFilePath, JsonConvert.SerializeObject(Global.InstalledAddons));
 
-            Console.WriteLine($"\n{addons.Count(x => !x.New && !x.Updated)} up-to-date | {addons.Count(x => x.New)} installed | {addons.Count(x => x.Updated)} updated | {addons.Count(x => x.Error)} errors");
+            Console.WriteLine($"\n{addons.Count(x => !x.New && !x.Updated)} up-to-date | {addons.Count(x => x.New && !x.Error)} installed | {addons.Count(x => x.Updated && !x.Error)} updated | {addons.Count(x => x.Error)} errors");
             Exit("", 0);
         }
 
