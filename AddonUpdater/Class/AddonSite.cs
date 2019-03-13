@@ -56,7 +56,6 @@ namespace AddonUpdater.Class
             {
                 Response = new AddonSiteResponse();
                 var r = new Regex(@"overflow-tip\""\>(.*?)\<.*release-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", RegexOptions.Singleline | RegexOptions.Compiled);
-                //var r = new Regex(@"release-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", RegexOptions.Singleline | RegexOptions.Compiled);
 
                 Match m = r.Match(response);
                 if (m.Success)
