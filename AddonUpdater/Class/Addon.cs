@@ -23,6 +23,8 @@ namespace AddonUpdater.Class
         public AddonSiteResponse Response { get; private set; }
         private string DownloadedFilePath { get; set; }
 
+        public string AddonName { get { return !string.IsNullOrEmpty(Response?.AddonName) ? Response.AddonName : URL.OriginalString; } }
+
         public Addon(string URL)
         {
             this.URL = new Uri(URL);
@@ -87,7 +89,7 @@ namespace AddonUpdater.Class
                         if (string.IsNullOrEmpty(InstalledVersion)) { New = true; }
                         else { Updated = true; }
 
-                        Console.WriteLine($"Downloading {URL.OriginalString} - {(New ? "not installed" : $"new version {Response.Version}")}");
+                        Console.WriteLine($"Downloading {AddonName} - {(New ? "not installed" : $"new version {Response.Version}")}");
 
                         if (await Download(client))
                         {
@@ -96,7 +98,7 @@ namespace AddonUpdater.Class
                             File.Delete(DownloadedFilePath);
                         }
 
-                        if (Error) { Console.WriteLine($"{URL.OriginalString} - ERROR"); return; }
+                        if (Error) { Console.WriteLine($"{AddonName} - ERROR"); return; }
                     }
                 }
             }

@@ -38,6 +38,7 @@ namespace AddonUpdater.Class
     /// </summary>
     public class AddonSiteResponse
     {
+        public string AddonName { get; set; }
         public string Version { get; set; }
         public string DownloadURL { get; set; }
     }
@@ -54,13 +55,15 @@ namespace AddonUpdater.Class
             public Addon ParseResponse(string response, Uri url)
             {
                 Response = new AddonSiteResponse();
-                var r = new Regex(@"release-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", RegexOptions.Singleline | RegexOptions.Compiled);
+                var r = new Regex(@"overflow-tip\""\>(.*?)\<.*release-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", RegexOptions.Singleline | RegexOptions.Compiled);
+                //var r = new Regex(@"release-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", RegexOptions.Singleline | RegexOptions.Compiled);
 
                 Match m = r.Match(response);
                 if (m.Success)
                 {
-                    Response.DownloadURL = $"{url.Scheme}://{url.Host}{url.LocalPath}{(!url.LocalPath.Contains("/files") ? "/files" : "")}/{m.Groups[1].Value}/download";
-                    Response.Version = m.Groups[2].Value;
+                    Response.AddonName = m.Groups[1].Value;
+                    Response.DownloadURL = $"{url.Scheme}://{url.Host}{url.LocalPath}{(!url.LocalPath.Contains("/files") ? "/files" : "")}/{m.Groups[2].Value}/download";
+                    Response.Version = m.Groups[3].Value;
                 }
 
                 return null;
@@ -83,15 +86,14 @@ namespace AddonUpdater.Class
             {
                 Response = new AddonSiteResponse();
 
-                var r1 = new Regex(@"Version\:\s(.*?)\s", RegexOptions.Singleline | RegexOptions.Compiled);
-                Match m1 = r1.Match(response);
-                Response.Version = m1.Groups[1].Value;
-
-                // Extract ID from URL and use it to construct download link
-                Regex r2 = new Regex(@"info(\d+)", RegexOptions.Compiled);
-                Match m2 = r2.Match(url.Segments[2]);
-
-                Response.DownloadURL = $"https://cdn.wowinterface.com/downloads/file{m2.Groups[1].Value}/";
+                var r = new Regex(@"<h1>(.*?)\&nbsp.*Version\:\s(.*?)(?:\s|\<).*fileid=(\d+)", RegexOptions.Singleline | RegexOptions.Compiled);
+                Match m = r.Match(response);
+                if (m.Success)
+                {
+                    Response.AddonName = m.Groups[1].Value;
+                    Response.Version = m.Groups[2].Value;
+                    Response.DownloadURL = $"https://cdn.wowinterface.com/downloads/file{m.Groups[3].Value}/";
+                }
 
                 return null;
             }
@@ -115,20 +117,26 @@ namespace AddonUpdater.Class
 
                 if (url.LocalPath == "/addons.php")
                 {
-                    var r = new Regex(@"The latest version of this addon is <b class=""VIP"">(.*?)\<\/b>", RegexOptions.Compiled);
-                    Match m = r.Match(response);
-                    if (m.Success)
+                    var r = new Regex(@"(?:<span class=""Member"">(.*?)\<|The latest version of this addon is <b class=""VIP"">(.*?)\<\/b>)", RegexOptions.Compiled);
+                    var m = r.Matches(response);
+
+                    if (m.Count >= 2)
                     {
+                        Response.AddonName = m[0].Groups[1].Value;
                         Response.DownloadURL = url.ToString().Replace("id=", "download=");
-                        Response.Version = m.Groups[1].Value;
+                        Response.Version = m[1].Groups[2].Value;
                     }
                 }
                 else if (url.LocalPath == "/download.php")
                 {
-                    var r = new Regex(@"(?:(\/downloads\/(.*?)\"")|(Version\s(.*?)\s))", RegexOptions.Singleline | RegexOptions.Compiled);
-                    var matches = r.Matches(response);
-                    Response.DownloadURL = matches[0].Success ? $"{url.Scheme}://{url.Host}/downloads/{matches[0].Groups[2].Value}" : "";
-                    Response.Version = matches[1].Success ? matches[1].Groups[4].Value : "";
+                    var r = new Regex(@"(?:\"">(.*?)<\/h1>|(?:\/downloads\/)(.*?)\""|Premium\""\>(.*?)\<\/b\>)", RegexOptions.Compiled);
+                    var m = r.Matches(response);
+                    if (m.Count > 2)
+                    {
+                        Response.AddonName = m[0].Groups[1].Value;
+                        Response.Version = m[2].Groups[3].Value;
+                        Response.DownloadURL = m[1].Success ? $"{url.Scheme}://{url.Host}/downloads/{m[1].Groups[2].Value}" : "";
+                    }
                 }
 
                 return null;
