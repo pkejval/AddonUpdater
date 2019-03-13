@@ -6,6 +6,8 @@ namespace AddonUpdater.Class
 {
     public static class Global
     {
+        public static object WriteLock = new object();
+
         /// <summary>
         /// Holds all supported addon sites and its types.
         /// </summary>
@@ -37,5 +39,24 @@ namespace AddonUpdater.Class
         /// Sets if app is running in interactive mode = hold at the end.
         /// </summary>
         public static bool InteractiveMode = true;
+
+        public static void ConsoleWrite(int line, string status, string text, ConsoleColor color)
+        {
+            lock (WriteLock)
+            {
+                var positiontop = Console.CursorTop;
+                var positionleft = Console.CursorLeft;
+                Console.SetCursorPosition(0, line);
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, line);
+                Console.Write("[");
+                Console.ForegroundColor = color;
+                Console.Write(status);
+                Console.ResetColor();
+                Console.Write("]");
+                Console.Write($" - {text}");
+                Console.SetCursorPosition(positionleft, positiontop);
+            }
+        }
     }
 }

@@ -70,7 +70,7 @@ namespace AddonUpdater
                 }
             }
 
-            Console.WriteLine("Fetching new updates...");
+            Console.WriteLine("Fetching new updates...\n");
 
             // execute update task for each addon with 2 minutes timeout
             var tasks = addons.Select(x => x.Update());

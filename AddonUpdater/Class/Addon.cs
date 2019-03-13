@@ -22,12 +22,18 @@ namespace AddonUpdater.Class
         public string InstalledVersion { get; private set; }
         public AddonSiteResponse Response { get; private set; }
         private string DownloadedFilePath { get; set; }
+        private int ConsoleLine { get; set; }
 
         public string AddonName { get { return !string.IsNullOrEmpty(Response?.AddonName) ? Response.AddonName : URL.OriginalString; } }
 
         public Addon(string URL)
         {
             this.URL = new Uri(URL);
+        }
+
+        private void Print(string text, ConsoleColor color = ConsoleColor.White)
+        {
+            Global.ConsoleWrite(ConsoleLine, text, AddonName, color);
         }
 
         /// <summary>
@@ -39,10 +45,14 @@ namespace AddonUpdater.Class
         {
             try
             {
-                if (!Global.AddonSites.ContainsKey(URL.Host)) { Console.WriteLine($"Unsupported addon site: {URL.Host}"); Error = true; return; }
+                Console.WriteLine();
+                ConsoleLine = Console.CursorTop - 1;
+                if (!Global.AddonSites.ContainsKey(URL.Host)) { Print("NOT SUPPORTED", ConsoleColor.Red); Error = true; return; }
 
                 bool download = true;
                 InstalledVersion = Global.InstalledAddons.ContainsKey(URL.OriginalString) ? Global.InstalledAddons[URL.OriginalString] : "";
+
+                Print("Searching", ConsoleColor.DarkYellow);
 
                 using (var client = new HttpClient())
                 {
@@ -78,7 +88,7 @@ namespace AddonUpdater.Class
                             }
                         }
                         // If Http exception - wait 5s and try again.... after 24 tries = 2 minutes, fail
-                        catch (HttpRequestException) { iter++; if (iter >= 24) { break; } Thread.Sleep(5000); connection_problem = true; }
+                        catch (HttpRequestException) { iter++; if (iter >= 24) { break; } Print("Waiting", ConsoleColor.DarkRed); Thread.Sleep(5000); connection_problem = true; }
                     }
 
                     if (connection_problem) { Error = true; return; }
@@ -89,20 +99,24 @@ namespace AddonUpdater.Class
                         if (string.IsNullOrEmpty(InstalledVersion)) { New = true; }
                         else { Updated = true; }
 
-                        Console.WriteLine($"Downloading {AddonName} - {(New ? "not installed" : $"new version {Response.Version}")}");
+                        //Console.WriteLine($"Downloading {AddonName} - {(New ? "not installed" : $"new version {Response.Version}")}");
+                        Print("Downloading", ConsoleColor.Yellow);
 
                         if (await Download(client))
                         {
+                            Print("Extracting", ConsoleColor.DarkYellow);
                             FastZip zip = new FastZip();
                             zip.ExtractZip(DownloadedFilePath, Global.WoWPath, null);
                             File.Delete(DownloadedFilePath);
                         }
 
-                        if (Error) { Console.WriteLine($"{AddonName} - ERROR"); return; }
+                        if (Error) { Print("ERROR", ConsoleColor.Red); return; }
                     }
+
+                    Print(New ? "INSTALLED" : Updated ? "UPDATED" : Error ? "ERROR" : "NO UPDATE", New || Updated ? ConsoleColor.Green : Error ? ConsoleColor.Red : ConsoleColor.Green);
                 }
             }
-            catch (Exception ex) { Console.WriteLine(ex.ToString()); Error = true; return; }
+            catch (Exception ex) { Console.WriteLine(ex.ToString()); Print("ERROR", ConsoleColor.Red); Error = true; return; }
         }
 
         /// <summary>
