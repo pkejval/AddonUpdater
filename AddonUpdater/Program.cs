@@ -61,6 +61,13 @@ namespace AddonUpdater
             {
                 try { Global.InstalledAddons = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(Global.AddonUpdaterFilePath)); }
                 catch { Global.InstalledAddons = new Dictionary<string, string>(); }
+
+                // reinit dict when file is empty or currupted = variable is null
+                if (Global.InstalledAddons == null)
+                {
+                    Console.WriteLine("AddonUpdater.json file is empty! Forcing reinstallation of each addon.");
+                    Global.InstalledAddons = new Dictionary<string, string>();
+                }
             }
 
             Console.WriteLine("Fetching new updates...");
