@@ -13,7 +13,7 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace AddonUpdater.Class
 {
-    public class Addon
+    public class Addon : IEquatable<Addon>
     {
         public Uri URL { get; private set; }
         public bool New { get; private set; }
@@ -24,13 +24,18 @@ namespace AddonUpdater.Class
         private string DownloadedFilePath { get; set; }
         private int ConsoleLine { get; set; }
 
-        public string AddonName { get { return !string.IsNullOrEmpty(Response?.AddonName) ? Response.AddonName : URL.OriginalString; } }
+        public string AddonName { get { return !string.IsNullOrEmpty(Response?.AddonName) ? $"{Response.AddonName} ({InstalledVersion})" : URL.OriginalString; } }
 
         public Addon(string URL)
         {
             this.URL = new Uri(URL);
         }
 
+        /// <summary>
+        /// Prints colored text to console. Format: [colored_text] - addon name
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="color"></param>
         private void Print(string text, ConsoleColor color = ConsoleColor.White)
         {
             Global.ConsoleWrite(ConsoleLine, text, AddonName, color);
@@ -99,8 +104,7 @@ namespace AddonUpdater.Class
                         if (string.IsNullOrEmpty(InstalledVersion)) { New = true; }
                         else { Updated = true; }
 
-                        //Console.WriteLine($"Downloading {AddonName} - {(New ? "not installed" : $"new version {Response.Version}")}");
-                        Print("Downloading", ConsoleColor.Yellow);
+                        Print($"Downloading ({Response?.Version})", ConsoleColor.Yellow);
 
                         if (await Download(client))
                         {
@@ -113,7 +117,7 @@ namespace AddonUpdater.Class
                         if (Error) { Print("ERROR", ConsoleColor.Red); return; }
                     }
 
-                    Print(New ? "INSTALLED" : Updated ? "UPDATED" : Error ? "ERROR" : "NO UPDATE", New || Updated ? ConsoleColor.Green : Error ? ConsoleColor.Red : ConsoleColor.Green);
+                    Print(New ? "INSTALLED" : Updated ? $"UPDATED ({Response?.Version})" : Error ? "ERROR" : "NO UPDATE", New || Updated ? ConsoleColor.Green : Error ? ConsoleColor.Red : ConsoleColor.Green);
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.ToString()); Print("ERROR", ConsoleColor.Red); Error = true; return; }
@@ -143,6 +147,16 @@ namespace AddonUpdater.Class
                 return true;
             }
             catch { Error = true; return false; }
+        }
+
+        public bool Equals(Addon addon)
+        {
+            return URL == addon.URL;
+        }
+
+        public override int GetHashCode()
+        {
+            return URL.GetHashCode();
         }
     }
 }

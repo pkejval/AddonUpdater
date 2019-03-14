@@ -28,7 +28,7 @@ namespace AddonUpdater
             if (!File.Exists(cnf_path))
             {
                 File.WriteAllText(cnf_path, "# Set path to your World of Warcraft installation\nWOW_PATH=C:\\Program Files (x86)\\Battle.NET\\World of Warcraft\n\n# Set list of addons URLs - delimited by new line (ENTER)\n#https://wow.curseforge.com/projects/plater-nameplates\n##https://www.tukui.org/download.php?ui=elvui");
-                Exit($"Config file wasn't found at {cnf_path}! Creating example. Please set WOW_PATH and addons URLs.", 1);
+                Exit($"Config file wasn't found at {cnf_path}! Creating example file. Please open it and set WOW_PATH and addons URLs.", 1);
             }
             else
             {
@@ -73,11 +73,11 @@ namespace AddonUpdater
             Console.WriteLine("Fetching new updates...\n");
 
             // execute update task for each addon with 2 minutes timeout
-            var tasks = addons.Select(x => x.Update());
+            var tasks = addons.Distinct().Select(x => x.Update());
             await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(120000));
 
             // update version dict
-            addons.ForEach(x => { Global.InstalledAddons[x.URL.OriginalString] = x.Response?.Version; });
+            addons.ForEach(x => { if (x.Response != null && !string.IsNullOrEmpty(x.Response.Version)) Global.InstalledAddons[x.URL.OriginalString] = x.Response?.Version; });
             // save versions dict to file
             File.WriteAllText(Global.AddonUpdaterFilePath, JsonConvert.SerializeObject(Global.InstalledAddons));
 

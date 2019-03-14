@@ -16,6 +16,7 @@ https://www.tukui.org/addons.php?id=3
 # Quality of life @ raiding, M+
 https://www.wowace.com/projects/weakauras-2
 https://wow.curseforge.com/projects/plater-nameplates
+https://wow.curseforge.com/projects/plater-nameplates
 https://wow.curseforge.com/projects/deadly-boss-mods
 https://wowinterface.com/downloads/info5086-BigWigsBossmods.html
 https://www.curseforge.com/wow/addons/gtfo
