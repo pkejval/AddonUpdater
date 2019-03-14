@@ -2,8 +2,12 @@
 WOW_PATH=C:\TMP\WOW
 
 # Set list of addons URLs - delimited by new line (ENTER)
-# Possible problematic URL
-https://wowinterface.com/downloads/info5086-BigWigsBossmods.html
+# Invalid URLs
+https://www.wowace.com/projects/weakauraz-2
+https://www.tukui.org/download.php?ui=elv
+https://wow.curseforge.com/projects/detailz
+https://www.curseforge.com/wow/addons/controlpanelz2
+# Possible problematic URLs
 https://wow.curseforge.com/projects/clique?gameCategorySlug=addons&projectID=15564
 # ELV UI
 https://www.tukui.org/download.php?ui=elvui
@@ -13,6 +17,7 @@ https://www.tukui.org/addons.php?id=3
 https://www.wowace.com/projects/weakauras-2
 https://wow.curseforge.com/projects/plater-nameplates
 https://wow.curseforge.com/projects/deadly-boss-mods
+https://wowinterface.com/downloads/info5086-BigWigsBossmods.html
 https://www.curseforge.com/wow/addons/gtfo
 https://wow.curseforge.com/projects/details
 https://wow.curseforge.com/projects/instance-portals

@@ -127,6 +127,8 @@ namespace AddonUpdater.Class
         {
             try
             {
+                if (Response == null || string.IsNullOrEmpty(Response.DownloadURL)) { throw new Exception("Download URL not valid"); }
+
                 var tmp = Path.GetTempFileName();
 
                 using (var result = await client.GetStreamAsync(Response.DownloadURL))
