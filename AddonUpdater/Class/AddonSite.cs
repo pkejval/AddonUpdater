@@ -55,7 +55,7 @@ namespace AddonUpdater.Class
             public Addon ParseResponse(string response, Uri url)
             {
                 Response = new AddonSiteResponse();
-                var r = new Regex(@"overflow-tip\""\>(.*?)\<.*release-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", RegexOptions.Singleline | RegexOptions.Compiled);
+                var r = new Regex(@"overflow-tip\""\>(.*?)\<.*?release-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", RegexOptions.Singleline | RegexOptions.Compiled);
 
                 Match m = r.Match(response);
                 if (m.Success)
