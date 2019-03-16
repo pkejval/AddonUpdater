@@ -2,6 +2,7 @@ language: csharp
 os: 
  - windows
  - linux
+dist: xenial
 mono: none
 dotnet: 2.2
 script:
