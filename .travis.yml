@@ -3,7 +3,7 @@ os:
  - windows
  - linux
 mono: none
-dotnet: 2.2.105
+dotnet: 2.2
 script:
  - dotnet restore
  - dotnet build -c Release
