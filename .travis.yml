@@ -1,6 +1,5 @@
 language: csharp
 os: 
- - windows
  - linux
 dist: xenial
 mono: none
