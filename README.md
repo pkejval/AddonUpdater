@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pkejval/AddonUpdater.svg?branch=master)](https://travis-ci.org/pkejval/AddonUpdater)
+
 # AddonUpdater
 Simple addon updater for World of Warcraft. Do you hate to have Twitch/TukUI clients running in background to update your addons? I do! That's why I created this project - just update my addons and exit! 
 
