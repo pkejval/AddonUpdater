@@ -1,6 +1,6 @@
-Windows [![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=windows)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master)</br>
-Linux [![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=linux)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master)</br>
-MAC [![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=mac)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master)</br>
+[![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=windows)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master) Windows</br>
+[![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=linux)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master)Linux</br>
+[![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=mac)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master)MAC
 
 # AddonUpdater
 Simple addon updater for World of Warcraft. Do you hate to have Twitch/TukUI clients running in background to update your addons? I do! That's why I created this project - just update my addons and exit! 
