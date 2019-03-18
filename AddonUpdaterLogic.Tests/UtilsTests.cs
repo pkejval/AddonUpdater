@@ -37,8 +37,8 @@ namespace AddonUpdaterLogic.Tests
             Assert.AreNotEqual(cnf.Item1.Count(), 0);
             Assert.AreEqual(cnf.Item1.Count(), 2);
             Assert.AreEqual(cnf.Item1.Contains("https://wow.curseforge.com/projects/plater-nameplates") && cnf.Item1.Contains("https://www.tukui.org/download.php?ui=elvui"), true);
-            Assert.AreEqual(cnf.Item2, @"C:\Program Files (x86)\Battle.NET\World of Warcraft\_retail_\Interface\Addons");
-            Assert.AreEqual(cnf.Item3, @"C:\Program Files (x86)\Battle.NET\World of Warcraft\_retail_\Interface\Addons\AddonUpdater.json");
+            Assert.AreEqual(cnf.Item2, @"C:\Program Files (x86)\Battle.NET\World of Warcraft\_retail_\Interface\Addons".Replace('/', '\\'));
+            Assert.AreEqual(cnf.Item3, @"C:\Program Files (x86)\Battle.NET\World of Warcraft\_retail_\Interface\Addons\AddonUpdater.json".Replace('/', '\\')); ;
         }
 
         [TestMethod]
