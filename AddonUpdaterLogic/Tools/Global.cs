@@ -25,5 +25,7 @@ namespace AddonUpdaterLogic
         /// Path to AddonUpdaterFilePath DB file.
         /// </summary>
         public static string AddonUpdaterFilePath;
+
+        public const string ExampleConfig = "# Set path to your World of Warcraft installation\nWOW_PATH=C:\\Program Files (x86)\\Battle.NET\\World of Warcraft\n\n# Set list of addons URLs - delimited by new line (ENTER)\nhttps://wow.curseforge.com/projects/plater-nameplates\nhttps://www.tukui.org/download.php?ui=elvui";
     }
 }
