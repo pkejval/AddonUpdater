@@ -1,0 +1,46 @@
+﻿# Set path to your World of Warcraft installation
+WOW_PATH=C:\TMP\WOW
+
+# Set list of addons URLs - delimited by new line (ENTER)
+# Invalid URLs
+https://www.wowace.com/projects/weakauraz-2
+https://www.tukui.org/download.php?ui=elv
+https://wow.curseforge.com/projects/detailz
+https://www.curseforge.com/wow/addons/controlpanelz2
+# Possible problematic URLs
+https://wow.curseforge.com/projects/clique?gameCategorySlug=addons&projectID=15564
+# ELV UI
+https://www.tukui.org/download.php?ui=elvui
+https://www.tukui.org/addons.php?id=38
+https://www.tukui.org/addons.php?id=3
+# Quality of life @ raiding, M+
+https://www.wowace.com/projects/weakauras-2
+https://wow.curseforge.com/projects/plater-nameplates
+https://wow.curseforge.com/projects/plater-nameplates
+https://wow.curseforge.com/projects/deadly-boss-mods
+https://wowinterface.com/downloads/info5086-BigWigsBossmods.html
+https://www.curseforge.com/wow/addons/gtfo
+https://wow.curseforge.com/projects/details
+https://wow.curseforge.com/projects/instance-portals
+https://wow.curseforge.com/projects/pawn
+https://wow.curseforge.com/projects/subspec
+https://wow.curseforge.com/projects/raiderio
+https://www.wowace.com/projects/angry-keystones
+https://wow.curseforge.com/projects/autolog
+https://wow.curseforge.com/projects/herorotation
+https://wow.curseforge.com/projects/personal-loot-trader
+https://wow.curseforge.com/projects/vuhdo
+https://www.curseforge.com/wow/addons/premade-groups-filter
+# Quality of life - Auction, bags, WQ, etc
+https://wow.curseforge.com/projects/auctionator
+https://www.wowace.com/projects/adibags
+https://wow.curseforge.com/projects/adibags_by_expansion
+https://wow.curseforge.com/projects/adibags-azerite-gear
+https://wow.curseforge.com/projects/world-quest-tracker
+https://www.curseforge.com/wow/addons/controlpanel2
+# Chat
+https://www.wowace.com/projects/wim-3
+https://wow.curseforge.com/projects/wim-skin-elvui
+# Guild
+https://wow.curseforge.com/projects/guild-roster-manager
+https://wow.curseforge.com/projects/group-calendar

@@ -1,0 +1,20 @@
+﻿<Controls:MetroWindow x:Class="AddonUpdaterGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AddonUpdaterGUI"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <DataGrid x:Name="grid_addons" AutoGenerateColumns="False" Margin="0,0,0,82" ItemsSource="{Binding Path=., Mode=OneWay, IsAsync=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Addon" Binding="{Binding AddonName, Mode=OneWay}" />
+                <DataGridTextColumn Header="Status" Binding="{Binding ProgressVerbose, Mode=OneWay}" />
+                <DataGridTextColumn Header="Installed Version" Binding="{Binding InstalledVersion, Mode=OneWay}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="31,384,0,10" Width="75" Click="Button_Click" />
+    </Grid>
+</Controls:MetroWindow>

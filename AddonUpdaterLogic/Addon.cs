@@ -79,6 +79,21 @@ namespace AddonUpdaterLogic
         public string AddonName { get { return !string.IsNullOrEmpty(Response?.AddonName) ? $"{Response.AddonName} {(string.IsNullOrEmpty(InstalledVersion) ? "" : $"({InstalledVersion})")}" : URL.OriginalString; } }
         public string StatusVerbose { get { return Status != AddonStatus.Error ? (Status == AddonStatus.New ? $"INSTALLED" : Status == AddonStatus.Updated ? $"UPDATED ({Response.Version})" : AddonStatus.UpToDate.Desc()) : AddonProgress.Error.Desc(); } }
 
+        public string ProgressVerbose
+        {
+            get
+            {
+                switch (Progress)
+                {
+                    case AddonProgress.Done:
+                        return StatusVerbose;
+
+                    default:
+                        return Progress.Desc();
+                }
+            }
+        }
+
         public Addon(string URL)
         {
             this.URL = new Uri(URL);
