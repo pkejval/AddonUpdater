@@ -2,6 +2,7 @@
 using ICSharpCode.SharpZipLib.Zip;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
@@ -79,6 +80,21 @@ namespace AddonUpdaterLogic
         public string AddonName { get { return !string.IsNullOrEmpty(Response?.AddonName) ? $"{Response.AddonName} {(string.IsNullOrEmpty(InstalledVersion) ? "" : $"({InstalledVersion})")}" : URL.OriginalString; } }
         public string StatusVerbose { get { return Status != AddonStatus.Error ? (Status == AddonStatus.New ? $"INSTALLED" : Status == AddonStatus.Updated ? $"UPDATED ({Response.Version})" : AddonStatus.UpToDate.Desc()) : AddonProgress.Error.Desc(); } }
 
+        public string ProgressVerbose
+        {
+            get
+            {
+                switch (Progress)
+                {
+                    case AddonProgress.Done:
+                        return StatusVerbose;
+
+                    default:
+                        return Progress.Desc();
+                }
+            }
+        }
+
         public Addon(string URL)
         {
             this.URL = new Uri(URL);
@@ -135,7 +151,8 @@ namespace AddonUpdaterLogic
                     }
                 }
                 // If Http exception - wait 5s and try again.... after 24 tries = 2 minutes, fail
-                catch (HttpRequestException) { iter++; if (iter >= 24) { break; } Progress = AddonProgress.Waiting; Thread.Sleep(5000); connection_problem = true; }
+                catch (HttpRequestException hre) { Debug.WriteLine(hre); iter++; if (iter >= 24) { break; } Progress = AddonProgress.Waiting; Thread.Sleep(5000); connection_problem = true; }
+                catch (Exception ex) { Debug.WriteLine(ex); }
             }
 
             return !connection_problem;
@@ -150,7 +167,7 @@ namespace AddonUpdaterLogic
                 zip.ExtractZip(DownloadedFilePath, Global.WoWPath, null);
                 File.Delete(DownloadedFilePath);
             }
-            catch { Error(); }
+            catch (Exception ex) { Debug.WriteLine(ex); Error(); }
         }
 
         /// <summary>
@@ -169,6 +186,7 @@ namespace AddonUpdaterLogic
                 InstalledVersion = Global.InstalledAddons.ContainsKey(URL.OriginalString) ? Global.InstalledAddons[URL.OriginalString] : "";
 
                 if (!await LookupSite(client)) { Error(); return; }
+                if (Response == null || string.IsNullOrEmpty(Response.DownloadURL)) { throw new Exception("Response empty!"); }
 
                 // download and extract only if website version is different
                 if (ShouldDownload && (string.IsNullOrEmpty(InstalledVersion) || InstalledVersion != Response.Version))
@@ -185,7 +203,7 @@ namespace AddonUpdaterLogic
 
                 Progress = AddonProgress.Done;
             }
-            catch { Error(); return; }
+            catch (Exception ex) { Debug.WriteLine(ex); Error(); return; }
             finally { client?.Dispose(); }
         }
 
@@ -214,7 +232,7 @@ namespace AddonUpdaterLogic
 
                 return true;
             }
-            catch { Error(); return false; }
+            catch (Exception ex) { Debug.WriteLine(ex); Error(); return false; }
         }
 
         public bool Equals(Addon addon)
