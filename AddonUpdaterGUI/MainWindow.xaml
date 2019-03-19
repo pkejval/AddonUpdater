@@ -6,15 +6,15 @@
         xmlns:local="clr-namespace:AddonUpdaterGUI"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="AddonUpdater" Height="450" Width="800"
+                      x:Name="main" WindowStartupLocation="CenterScreen">
     <Grid>
-        <DataGrid x:Name="grid_addons" AutoGenerateColumns="False" Margin="0,0,0,82" ItemsSource="{Binding Path=., Mode=OneWay, IsAsync=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
+        <DataGrid x:Name="grid_addons" AutoGenerateColumns="False" Margin="0,40,0,0">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Addon" Binding="{Binding AddonName, Mode=OneWay}" />
-                <DataGridTextColumn Header="Status" Binding="{Binding ProgressVerbose, Mode=OneWay}" />
-                <DataGridTextColumn Header="Installed Version" Binding="{Binding InstalledVersion, Mode=OneWay}" />
+                <DataGridTextColumn Header="Addon" Binding="{Binding Name, Mode=OneWay}" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Progress, Mode=OneWay}" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="31,384,0,10" Width="75" Click="Button_Click" />
+        <Button IsEnabled="{Binding ElementName=main, Path=btn_enabled}" Content="Update" HorizontalAlignment="Left" Width="75" Click="Button_Click" Height="25" VerticalAlignment="Top" Margin="10,10,0,0" />
     </Grid>
 </Controls:MetroWindow>
