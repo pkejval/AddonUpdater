@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddonUpdaterCli", "AddonUpd
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddonUpdaterLogic.Tests", "AddonUpdaterLogic.Tests\AddonUpdaterLogic.Tests.csproj", "{A7FE351D-E1C1-4D71-B2A8-DADE5C2AE864}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddonUpdaterGUI", "AddonUpdaterGUI\AddonUpdaterGUI.csproj", "{15476237-A23D-439B-B366-848613E16D8E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
