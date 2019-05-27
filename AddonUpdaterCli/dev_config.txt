@@ -38,6 +38,7 @@ https://wow.curseforge.com/projects/adibags_by_expansion
 https://wow.curseforge.com/projects/adibags-azerite-gear
 https://wow.curseforge.com/projects/world-quest-tracker
 https://www.curseforge.com/wow/addons/controlpanel2
+https://wow.curseforge.com/projects/narcissus
 # Chat
 https://www.wowace.com/projects/wim-3
 https://wow.curseforge.com/projects/wim-skin-elvui

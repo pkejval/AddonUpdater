@@ -12,17 +12,30 @@ namespace AddonUpdaterLogic.AddonSites
     {
         public AddonSiteResponse Response { get; private set; }
 
+        private enum ReleaseType
+        {
+            Release,
+            Beta,
+            Alpha
+        }
+
         public Addon ParseResponse(string response, Uri url)
         {
             Response = new AddonSiteResponse();
-            var r = new Regex(@"overflow-tip\""\>(.*?)\<.*?release-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", RegexOptions.Singleline | RegexOptions.Compiled);
 
-            Match m = r.Match(response);
-            if (m.Success)
+            foreach (string type in Enum.GetNames(typeof(ReleaseType)))
             {
-                Response.AddonName = m.Groups[1].Value;
-                Response.DownloadURL = $"{url.Scheme}://{url.Host}{url.LocalPath}{(!url.LocalPath.Contains("/files") ? "/files" : "")}/{m.Groups[2].Value}/download";
-                Response.Version = m.Groups[3].Value;
+                var r = new Regex(string.Format(@"overflow-tip\""\>(.*?)\<.*?{0}-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", type.ToLower()), RegexOptions.Singleline | RegexOptions.Compiled);
+
+                Match m = r.Match(response);
+                if (m.Success)
+                {
+                    Response.AddonName = m.Groups[1].Value;
+                    Response.DownloadURL = $"{url.Scheme}://{url.Host}{url.LocalPath}{(!url.LocalPath.Contains("/files") ? "/files" : "")}/{m.Groups[2].Value}/download";
+                    Response.Version = m.Groups[3].Value;
+
+                    break;
+                }
             }
 
             return null;
