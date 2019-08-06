@@ -32,6 +32,11 @@ namespace AddonUpdaterCli
 #endif
 
                 var addon_updater = new AddonUpdater(cnf_path);
+                if (!Directory.Exists(Global.WoWPath))
+                {
+                    Exit($"World of Warcraft not found in folder '{Global.WoWPath}'!", 1);
+                }
+
                 addon_updater.AddonProgressUpdated += addon_updater_AddonProgressUpdated;
                 await addon_updater.UpdateAll();
 
