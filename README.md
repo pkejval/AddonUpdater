@@ -8,9 +8,9 @@ Supports most popular addon sites:
 * tukui.org
 
 ### Build status
-[![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=windows)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master) Windows</br>
-[![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=linux)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master) Linux</br>
-[![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=mac)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master) MAC
+[![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=Job%20windows)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master) Windows</br>
+[![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=Job%20linux)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master) Linux</br>
+[![Build Status](https://dev.azure.com/kejval/AddonUpdater/_apis/build/status/pkejval.AddonUpdater?branchName=master&jobName=Job&configuration=Job%20mac)](https://dev.azure.com/kejval/AddonUpdater/_build/latest?definitionId=1&branchName=master) MAC
 
 ## Installation
 Download release.zip, extract and setup "config.txt" file.
