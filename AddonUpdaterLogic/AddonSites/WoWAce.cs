@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 namespace AddonUpdaterLogic.AddonSites
 {
     /// <summary>
-    /// Definition for wow.curseforge.com
+    /// Definition for wowace.com
     /// </summary>
-    public class Curse : IAddonSite
+    public class WoWAce : IAddonSite
     {
         public AddonSiteResponse Response { get; private set; }
 
@@ -25,14 +25,14 @@ namespace AddonUpdaterLogic.AddonSites
 
             foreach (string type in Enum.GetNames(typeof(ReleaseType)))
             {
-                var r = new Regex(string.Format(@"og:title"" content=""(.*?)""(?:.*?)title=""{0}""(?:.*?)data-name=""(.*?)"".*?a href="".*?(\d+)""", type), RegexOptions.Singleline);
+                var r = new Regex(string.Format(@"overflow-tip\""\>(.*?)\<.*?{0}-phase.*?\/files\/(\d+).*?data-name\=\""(.*?)\""", type.ToLower()), RegexOptions.Singleline | RegexOptions.Compiled);
 
                 Match m = r.Match(response);
                 if (m.Success)
                 {
                     Response.AddonName = m.Groups[1].Value;
-                    Response.DownloadURL = $"{url.Scheme}://{url.Host}{(url.Host == "www.curseforge.com" ? url.LocalPath.Replace("/files", "") : url.LocalPath)}/download/{m.Groups[3].Value}/file";
-                    Response.Version = m.Groups[2].Value;
+                    Response.DownloadURL = $"{url.Scheme}://{url.Host}{url.LocalPath}{(!url.LocalPath.Contains("/files") ? "/files" : "")}/{m.Groups[2].Value}/download";
+                    Response.Version = m.Groups[3].Value;
 
                     break;
                 }
@@ -46,6 +46,6 @@ namespace AddonUpdaterLogic.AddonSites
             return $"{url}/files?sort=releasetype";
         }
 
-        public IEnumerable<string> HandleURLs { get { return new string[] { "wow.curseforge.com", "www.curseforge.com" }; } }
+        public IEnumerable<string> HandleURLs { get { return new string[] { "www.wowace.com" }; } }
     }
 }
