@@ -26,7 +26,7 @@ namespace AddonUpdaterCli
             try
             {
 #if RELEASE
-                var cnf_path = Path.Join(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "config.txt");
+                var cnf_path = Path.Join(Environment.CurrentDirectory, "config.txt");
 #else
                 var cnf_path = Path.Join(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "dev_config.txt");
 #endif
